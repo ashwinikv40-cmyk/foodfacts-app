@@ -1,27 +1,37 @@
-import SearchBar from '../components/SearchBar'
-import FoodList from '../components/FoodList'
-import ErrorMessage from '../components/ErrorMessage'
-import useFoodSearch from '../hooks/useFoodSearch'
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import CircularProgress from "@mui/material/CircularProgress";
 
-function HomePage() {
-  const { results, loading, error, searchFood } = useFoodSearch()
+import SearchBar from "../components/SearchBar";
+import FoodCard from "../components/FoodCard";
+import useFoodSearch from "../hooks/useFoodSearch";
+
+const HomePage = () => {
+  const { results, loading, searchFood } = useFoodSearch();
 
   return (
-    <div>
-      <h2>Search Food</h2>
-
+    <Container>
       <SearchBar onSearch={searchFood} />
 
-      {loading && <p>Loading...</p>}
-      {error && <ErrorMessage message={error} />}
-
-      {!loading && !error && results.length === 0 && (
-        <p>Search for a food</p>
+      {loading && (
+        <CircularProgress />
       )}
 
-      <FoodList products={results} />
-    </div>
-  )
-}
+      <Grid container spacing={2}>
+        {results.map((item) => (
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            key={item.id}
+          >
+            <FoodCard product={item} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
+};
 
-export default HomePage
+export default HomePage;
